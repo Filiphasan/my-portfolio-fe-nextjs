@@ -10,6 +10,7 @@ export default function Home({data}) {
 }
 
 export async function getServerSideProps(context) {
+  // getServerSideProps içerisinde kullandığımız service fonksiyonları Server tarafında çalışıt. Aynı fonksiyonu component içinde useEffect ile kullanırsak Client Side çalışır.
   const data = await get('aboutme/public');
   return {
     props: { data },
