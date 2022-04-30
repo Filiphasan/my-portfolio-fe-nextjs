@@ -30,9 +30,9 @@ const _delete = (endpoint, id = null) => {
 
 const handleResponse = (response) => {
     const data = response.data;
-    if (data && data.status === responseStatusMsg.success) {
+    if (data && data?.status === responseStatusMsg.success) {
         return data.data
-    } else if (data && data.status === responseStatusMsg.error) {
+    } else if (data && data?.status === responseStatusMsg.error) {
         switch (data.status_code) {
             case httpStatusCode.forbidden:
             case httpStatusCode.unAuthorize:
