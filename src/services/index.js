@@ -1,6 +1,6 @@
 import axios from 'axios';
 import getConfig from 'next/config';
-import { constantsVariables } from '../helper/constantsVariable';
+import { constantsVariables, httpStatusCode, responseStatusMsg } from '../helper/constantsVariable';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -17,7 +17,7 @@ const _post = (endpoint, data) => {
 }
 
 const _put = (endpoint, data, id = null) => {
-    return axios.put(endpoint, data, getHeader()).then(handleResponse)
+    return axios.put(`${endpoint}/${id}`, data, getHeader()).then(handleResponse)
 }
 
 const _delete = (endpoint, id) => {
@@ -26,12 +26,18 @@ const _delete = (endpoint, id) => {
 
 const handleResponse = (response) => {
     const data = response.data;
-    if (data && data.status === 'success'){
+    if (data && data.status === responseStatusMsg.success) {
         return data.data
-    }else if (data && data.status === 'error'){
-        // API tarafından anlamlı hata mesajı dönmesi
-        return Promise.reject(data.message)
-    }else{
+    } else if (data && data.status === responseStatusMsg.error) {
+        if (data.status - code === httpStatusCode.forbidden || data.status - code === httpStatusCode.unAuthorize) {
+            // Clear Token
+        } else if (data.status - code === httpStatusCode.badRequest) {
+            //Validation Errors
+        } else {
+            // API tarafından anlamlı hata mesajı dönmesi
+            return Promise.reject(data.message)
+        }
+    } else {
         return Promise.reject("Beklenmeyen Bir Hata Oluştu!")
     }
 }
@@ -43,7 +49,7 @@ const getHeader = (contentType = "application/json") => {
             'Authorization': `Bearer ${token}`,
             'Content-Type': contentType
         }
-    }else{
+    } else {
         return {
             'Content-Type': contentType
         }
@@ -53,6 +59,6 @@ const getHeader = (contentType = "application/json") => {
 export const API = {
     'get': _get,
     'post': _post,
-    'put': _put, 
+    'put': _put,
     'delete': _delete
 };
