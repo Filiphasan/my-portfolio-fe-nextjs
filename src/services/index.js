@@ -33,15 +33,20 @@ const handleResponse = (response) => {
     if (data && data.status === responseStatusMsg.success) {
         return data.data
     } else if (data && data.status === responseStatusMsg.error) {
-        if (data.status_code === httpStatusCode.forbidden || data.status_code === httpStatusCode.unAuthorize) {
-            // Clear Token
-        } else if (data.status_code === httpStatusCode.badRequest) {
-            //Validation Errors
-        } else if (data.status_code === httpStatusCode.notFound) {
-            //Redirect 404 Page or Send error msg
-        } else {
-            // API tarafından anlamlı hata mesajı dönmesi
-            return Promise.reject(data.message)
+        switch (data.status_code) {
+            case httpStatusCode.forbidden:
+            case httpStatusCode.unAuthorize:
+                //Clear Token
+                break;
+            case httpStatusCode.badRequest:
+                //Validation Errors
+                break;
+            case httpStatusCode.notFound:
+                //Redirect 404 Page or Send error msg
+                break;
+            default:
+                //Other Error status
+                break;
         }
     } else {
         return Promise.reject("Beklenmeyen Bir Hata Oluştu!")
