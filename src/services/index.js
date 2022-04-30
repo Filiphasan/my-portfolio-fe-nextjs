@@ -17,11 +17,15 @@ const _post = (endpoint, data) => {
 }
 
 const _put = (endpoint, data, id = null) => {
-    return axios.put(`${endpoint}/${id}`, data, getHeader()).then(handleResponse)
+    let url = endpoint;
+    if (id) url = `${url}/${id}`
+    return axios.put(url, data, getHeader()).then(handleResponse)
 }
 
-const _delete = (endpoint, id) => {
-    return axios.delete(`${endpoint}/${id}`, getHeader()).then(handleResponse)
+const _delete = (endpoint, id = null) => {
+    let url = endpoint;
+    if (id) url = `${url}/${id}`
+    return axios.delete(url, getHeader()).then(handleResponse)
 }
 
 const handleResponse = (response) => {
@@ -29,10 +33,12 @@ const handleResponse = (response) => {
     if (data && data.status === responseStatusMsg.success) {
         return data.data
     } else if (data && data.status === responseStatusMsg.error) {
-        if (data.status - code === httpStatusCode.forbidden || data.status - code === httpStatusCode.unAuthorize) {
+        if (data.status_code === httpStatusCode.forbidden || data.status_code === httpStatusCode.unAuthorize) {
             // Clear Token
-        } else if (data.status - code === httpStatusCode.badRequest) {
+        } else if (data.status_code === httpStatusCode.badRequest) {
             //Validation Errors
+        } else if (data.status_code === httpStatusCode.notFound) {
+            //Redirect 404 Page or Send error msg
         } else {
             // API tarafından anlamlı hata mesajı dönmesi
             return Promise.reject(data.message)
