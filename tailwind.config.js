@@ -5,7 +5,9 @@ module.exports = {
     "./src/constants/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      
+    },
     container: {
       center: true,
       screens: {

@@ -9,6 +9,6 @@
 @tailwind components;
 @tailwind utilities;
 
-a{
+a {
     text-decoration: none !important;
 }
